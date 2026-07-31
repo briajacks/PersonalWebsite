@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+/* Dark mode is class-based: ThemeToggle adds/removes `.dark` on <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+   Accents come straight from the Tailwind palette: violet → fuchsia → amber
+   with cyan/emerald highlights (the site's original scheme). The semantic
+   tokens (canvas/panel/ink/body/muted/faint/line/tint/pop) hold the LIGHT
+   values here and are overridden for dark mode in `.dark` below — use these
+   in components so both modes stay in sync.
+--------------------------------------------------------------------------- */
+@theme {
+  /* Surfaces */
+  --color-canvas: #faf8fc;
+  --color-panel: #ffffff;
+
+  /* Text */
+  --color-ink: #221833;
+  --color-body: #494159;
+  --color-muted: #766e87;
+  --color-faint: #a8a1b8;
+
+  /* Borders & subtle fills */
+  --color-line: #e8e4f0;
+  --color-tint: rgb(34 24 51 / 0.05);
+
+  /* Accent used for colored text/links — fuchsia-600 in light,
+     fuchsia-300 in dark (each readable against its background) */
+  --color-pop: #c026d3;
+
+  /* Custom animations (used via `animate-*` utilities) */
+  --animate-blob: blob 16s ease-in-out infinite;
+  --animate-blob-slow: blob 22s ease-in-out infinite reverse;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(40px, -50px) scale(1.15);
+    }
+    66% {
+      transform: translate(-30px, 30px) scale(0.9);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+}
+
+/* Dark-mode values for the semantic tokens (the original midnight theme) */
+.dark {
+  --color-canvas: #0a0c18;
+  --color-panel: #12152b;
+  --color-ink: #ffffff;
+  --color-body: #cbd5e1;
+  --color-muted: #94a3b8;
+  --color-faint: #64748b;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-tint: rgb(255 255 255 / 0.05);
+  --color-pop: #f0abfc;
+}
+
+/* Map the next/font CSS variables to Tailwind font utilities */
+@theme inline {
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  /* Keeps anchored sections from hiding under the fixed nav */
+  scroll-padding-top: 5.5rem;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-body);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  /* Guards against any decorative element causing horizontal scroll */
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: var(--color-fuchsia-500);
+  color: white;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-reveal animation (applied by components/Reveal.tsx)
+--------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Skip animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-blob,
+  .animate-blob-slow,
+  .animate-float {
+    animation: none;
+  }
+}
