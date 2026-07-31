@@ -39,7 +39,7 @@ export default function Hero() {
             from REST APIs and database design to clean, responsive front ends.
             Certified in networking and infrastructure (CCNA, CompTIA A+), I
             bring a full-picture understanding of how the web works, from the
-            wire to the browser. Currently freelancing, looking for my next role on a
+            wire to the browser. Currently looking for my next role on a
             product-focused engineering team.
           </p>
 
